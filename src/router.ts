@@ -1,23 +1,35 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Vue from "vue";
+import store from "./store";
+import Router from "vue-router";
+import { RouteConfig } from "vue-router";
+import Home from "./views/Home.vue";
+// import Intro from "./views/Intro.vue";
 
-Vue.use(Router)
-
+Vue.use(Router);
+const routes: RouteConfig[] = [
+  {
+    path: "/intro",
+    name: "intro",
+    component: (): any => import("./views/Intro.vue")
+  },
+  {
+    path: "/home",
+    name: "home",
+    component: Home
+  }
+];
+if (store.state.introPage) {
+  routes.push({
+    path: "/",
+    redirect: "/home"
+  });
+} else {
+  routes.push({
+    path: "/",
+    redirect: "/intro"
+  });
+}
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    }
-  ]
-})
+  // mode: "history",
+  routes: routes
+});
